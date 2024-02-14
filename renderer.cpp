@@ -69,12 +69,14 @@ void Renderer::Init()
 	accumulator = (float4*)MALLOC64( SCRWIDTH * SCRHEIGHT * 16 );
 	memset( accumulator, 0, SCRWIDTH * SCRHEIGHT * 16 );
 	// try to load a camera
-	FILE* f = fopen( "camera.bin", "rb" );
-	if (f)
-	{
-		fread( &camera, 1, sizeof( Camera ), f );
-		fclose( f );
-	}
+	//FILE* f = fopen( "camera.bin", "rb" );
+	//if (f)
+	//{
+	//	fread( &camera, 1, sizeof( Camera ), f );
+	//	fclose( f );
+	//}
+
+	camera = Camera();
 }
 
 // -----------------------------------------------------------
@@ -98,6 +100,7 @@ float3 Renderer::Trace( Ray& ray )
 // -----------------------------------------------------------
 void Renderer::Tick( float deltaTime )
 {
+	camera.SetTargetYaw(camera.yaw + deltaTime * rotDir * 0.1f);
 	// pixel loop
 	Timer t;
 	// lines are executed as OpenMP parallel tasks (disabled in DEBUG)
@@ -118,7 +121,7 @@ void Renderer::Tick( float deltaTime )
 	avg = (1 - alpha) * avg + alpha * t.elapsed() * 1000;
 	if (alpha > 0.05f) alpha *= 0.5f;
 	float fps = 1000.0f / avg, rps = (SCRWIDTH * SCRHEIGHT) / avg;
-	printf( "%5.2fms (%.1ffps) - %.1fMrays/s\n", avg, fps, rps / 1000 );
+	//printf( "%5.2fms (%.1ffps) - %.1fMrays/s\n", avg, fps, rps / 1000 );
 	// handle user input
 	camera.HandleInput( deltaTime );
 }
@@ -143,4 +146,20 @@ void Renderer::Shutdown()
 	FILE* f = fopen( "camera.bin", "wb" );
 	fwrite( &camera, 1, sizeof( Camera ), f );
 	fclose( f );
+}
+
+void Tmpl8::Renderer::KeyUp(int key)
+{
+	if (key == 81)
+		rotDir += 1;
+	if (key == 69)
+		rotDir -= 1;
+}
+
+void Renderer::KeyDown(int key)
+{
+	if (key == 81)
+		rotDir -= 1;
+	if (key == 69)
+		rotDir += 1;
 }

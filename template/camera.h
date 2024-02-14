@@ -36,7 +36,7 @@ public:
 	bool HandleInput( const float t )
 	{
 		if (!WindowHasFocus()) return false;
-		float speed = 0.0025f * t;
+		float speed = 0.00025f * t;
 		float3 ahead = normalize( camTarget - camPos );
 		float3 tmpUp( 0, 1, 0 );
 		float3 right = normalize( cross( tmpUp, ahead ) );
@@ -46,14 +46,14 @@ public:
 		if (IsKeyDown( GLFW_KEY_D )) camPos += speed * 2 * right, changed = true;
 		if (IsKeyDown( GLFW_KEY_W )) camPos += speed * 2 * ahead, changed = true;
 		if (IsKeyDown( GLFW_KEY_S )) camPos -= speed * 2 * ahead, changed = true;
-		if (IsKeyDown( GLFW_KEY_R )) camPos += speed * 2 * up, changed = true;
-		if (IsKeyDown( GLFW_KEY_F )) camPos -= speed * 2 * up, changed = true;
+		if (IsKeyDown( GLFW_KEY_SPACE )) camPos += speed * 2 * up, changed = true;
+		if (IsKeyDown( GLFW_KEY_LEFT_CONTROL )) camPos -= speed * 2 * up, changed = true;
 		camTarget = camPos + ahead;
 		if (IsKeyDown( GLFW_KEY_UP )) camTarget -= speed * up, changed = true;
 		if (IsKeyDown( GLFW_KEY_DOWN )) camTarget += speed * up, changed = true;
 		if (IsKeyDown( GLFW_KEY_LEFT )) camTarget -= speed * right, changed = true;
 		if (IsKeyDown( GLFW_KEY_RIGHT )) camTarget += speed * right, changed = true;
-		if (!changed) return false;
+		//if (!changed) return false;
 		ahead = normalize( camTarget - camPos );
 		up = normalize( cross( ahead, right ) );
 		right = normalize( cross( up, ahead ) );
@@ -62,6 +62,14 @@ public:
 		bottomLeft = camPos + 2 * ahead - aspect * right - up;
 		return true;
 	}
+	void SetTargetYaw(float Yaw) {
+		yaw = Yaw;
+		float radians = yaw * DEG2RAD;
+		float sinAngle = sinf(radians);
+		float cosAngle = cosf(radians);
+		camTarget = camPos + float3(sinAngle, 0, cosAngle);
+	}
+	float yaw = 0;
 	float aspect = (float)SCRWIDTH / (float)SCRHEIGHT;
 	float3 camPos, camTarget;
 	float3 topLeft, topRight, bottomLeft;

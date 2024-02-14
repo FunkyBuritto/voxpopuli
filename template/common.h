@@ -12,6 +12,8 @@
 #define SQRT_PI_INV	0.56418958355f
 #define LARGE_FLOAT	1e34f
 
+#define RAD2DEG 57.295779513082320876f
+#define DEG2RAD 0.0174532925199432957f
 // IMPORTANT NOTE ON OPENCL COMPATIBILITY ON OLDER LAPTOPS:
 // Without a GPU, a laptop needs at least a 'Broadwell' Intel CPU (5th gen, 2015):
 // Intel's OpenCL implementation 'NEO' is not available on older devices.
