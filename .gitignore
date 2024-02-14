@@ -1,0 +1,7 @@
+.vs/
+x64/
+
+*.bin
+*.ini
+
+tmpl_2024-vox.vcxproj.user
